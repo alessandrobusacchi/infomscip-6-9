@@ -1,6 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from sklearn.neighbors import KNeighborsClassifier
+import pandas
 
 Q = [0, 10]
 T = np.array([[3, 3], [7, 3], [7, 7]])
@@ -52,10 +53,7 @@ for n in num_values:
     std_dev_misclassification = np.std(misclassifications_per_repeat)
     rq1_results.append((n, avg_misclassification, std_dev_misclassification))
 
-n_values, avg_misclassifications, std_devs = zip(*rq1_results)
-plt.errorbar(n_values, avg_misclassifications, yerr=std_devs, fmt='-o', capsize=5)
-plt.xlabel('Number of points in S (density)')
-plt.ylabel('Average misclassifications')
-plt.title('Misclassification dependency on density')
-plt.grid()
-plt.show()
+
+filename = "Exp1_Results.csv"
+df = pandas.DataFrame(data=rq1_results)
+df.to_csv(filename, index=False)
