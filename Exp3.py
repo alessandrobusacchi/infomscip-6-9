@@ -14,6 +14,13 @@ n = 800
 def calculate_area(vertices):
     return ConvexHull(np.array([vertices[0], vertices[1], vertices[2]])).volume
 
+def calculate_perimeter(vertices):
+    return (
+        np.linalg.norm(vertices[0] - vertices[1])
+        + np.linalg.norm(vertices[1] - vertices[2])
+        + np.linalg.norm(vertices[2] - vertices[0])
+    )
+
 def sign(p1, p2, p3):
     return (p1[0] - p3[0]) * (p2[1] - p3[1]) - (p2[0] - p3[0]) * (p1[1] - p3[1])
 
@@ -22,8 +29,6 @@ def is_inside_triangle(point, vertices):
     p2 = sign(point, vertices[1], vertices[2])
     p3 = sign(point, vertices[2], vertices[0])
     return (p1 < 0 and p2 < 0 and p3 < 0) or (p1 > 0 and p2 > 0 and p3 > 0)
-
-import numpy as np
 
 def generate_triangles():
     triangles = {}
@@ -68,7 +73,9 @@ triangle_shapes = generate_triangles()
 rq3_results = []
 for r, T in triangle_shapes.items():
     area = calculate_area(T)
-    print(area)
+    perimeter = calculate_perimeter(T)
+    #print(area)
+    #print(perimeter)
     misclassifications_per_repeat = []
     
     for _ in range(num_repetitions):
@@ -87,29 +94,13 @@ for r, T in triangle_shapes.items():
 
     avg_misclassification = np.mean(misclassifications_per_repeat)
     std_dev_misclassification = np.std(misclassifications_per_repeat)
-    rq3_results.append((r, avg_misclassification, std_dev_misclassification))
+    rq3_results.append((r, perimeter, avg_misclassification, std_dev_misclassification))
 
 filename = "Exp3_Results.csv"
 df = pandas.DataFrame(data=rq3_results)
 df.to_csv(filename, index=False)
 
 """
-ratio, avg_misclassifications, std_devs = zip(*rq3_results)
-
-plt.errorbar(ratio, avg_misclassifications, yerr=std_devs, fmt='-o', capsize=5)
-plt.xlabel('Triangle ratio')
-plt.ylabel('Average misclassifications')
-plt.title('Misclassification dependency on triangle ratio')
-plt.grid()
-
-idx = np.where(np.array(ratio) == 1)[0][0]
-highlighted_ratio = ratio[idx]
-highlighted_value = avg_misclassifications[idx]
-plt.scatter(highlighted_ratio, highlighted_value, color='red', zorder=5, label=f'Original triangle: ratio={highlighted_ratio}, value={highlighted_value:.2f}')
-plt.legend()
-plt.show()
-
-
 #triangles
 plt.figure(figsize=(8, 8))
 for idx, T in enumerate(triangle_shapes.values()):

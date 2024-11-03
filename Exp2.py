@@ -64,13 +64,3 @@ for f in f_values:
 filename = "Exp2_Results.csv"
 df = pandas.DataFrame(data=rq2_results)
 df.to_csv(filename, index=False)
-
-"""
-f_values, avg_misclassifications, std_devs = zip(*rq2_results)
-plt.errorbar(f_values, avg_misclassifications, yerr=std_devs, fmt='-o', capsize=5)
-plt.xlabel('Outlier fraction (f)')
-plt.ylabel('Average misclassifications')
-plt.title('Misclassification dependency on outlier fraction')
-plt.grid()
-plt.show()
-"""
