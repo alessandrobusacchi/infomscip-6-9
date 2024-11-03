@@ -3,6 +3,7 @@ import matplotlib.pyplot as plt
 from matplotlib.patches import Polygon
 from sklearn.neighbors import KNeighborsClassifier
 from scipy.spatial import ConvexHull
+import pandas
 
 Q = [0, 10]
 k = 7
@@ -88,6 +89,11 @@ for r, T in triangle_shapes.items():
     std_dev_misclassification = np.std(misclassifications_per_repeat)
     rq3_results.append((r, avg_misclassification, std_dev_misclassification))
 
+filename = "Exp3_Results.csv"
+df = pandas.DataFrame(data=rq3_results)
+df.to_csv(filename, index=False)
+
+"""
 ratio, avg_misclassifications, std_devs = zip(*rq3_results)
 
 plt.errorbar(ratio, avg_misclassifications, yerr=std_devs, fmt='-o', capsize=5)
@@ -103,7 +109,7 @@ plt.scatter(highlighted_ratio, highlighted_value, color='red', zorder=5, label=f
 plt.legend()
 plt.show()
 
-"""
+
 #triangles
 plt.figure(figsize=(8, 8))
 for idx, T in enumerate(triangle_shapes.values()):
